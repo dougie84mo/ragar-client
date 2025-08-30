@@ -1,0 +1,1490 @@
+/* Import Gaming Fonts - Must be first */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base Styles */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ==================== THEME SYSTEM ==================== */
+:root {
+  color-scheme: light dark;
+  
+  /* Base Colors */
+  --bg-primary: light-dark(#ffffff, #000000); /* Pure white/black for page backgrounds */
+  --bg-secondary: light-dark(#f8f9fa, #161B22);
+  --bg-card: light-dark(#ffffff, #21262d);
+  --bg-card-hover: light-dark(#f8f9fa, #30363d);
+  
+  /* Text Colors */
+  --text-primary: light-dark(#1a1a1a, #ffffff);
+  --text-secondary: light-dark(#6b7280, #8b949e);
+  --text-muted: light-dark(#9ca3af, #656d76);
+  --text-input: light-dark(#1a1a1a, #ffffff); /* Dark text in light mode, light text in dark mode */
+  
+  /* Input & Form Colors */
+  --bg-input: light-dark(#ffffff, #1f2937); /* Input background */
+  --border-input: light-dark(#d1d5db, #374151); /* Input border */
+  --border-input-focus: light-dark(#3b82f6, #60a5fa); /* Input border on focus */
+  --text-input-dark: light-dark(#1a1a1a, #ffffff); /* Force white text in dark mode */
+  
+  /* Search Input Specific */
+  --search-bg: light-dark(#f8f9fa, #30363d);
+  --search-border: light-dark(#d1d5db, #4b5563);
+  --search-text: light-dark(#374151, #e5e7eb);
+  --search-placeholder: light-dark(#9ca3af, #6b7280);
+  --search-icon: light-dark(#6b7280, #9ca3af);
+  
+  /* Border Colors */
+  --border-primary: light-dark(#e5e7eb, #30363d);
+  --border-secondary: light-dark(#d1d5db, #21262d);
+  --border-border: light-dark(#e5e7eb, #30363d);
+  --border-border-hover: light-dark(#d1d5db, #3c4043);
+  
+  /* Modal & Dropdown Backgrounds */
+  --modal-bg-dark: light-dark(
+    linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%), 
+    linear-gradient(135deg, #1e293b 0%, #334155 100%)
+  );
+  --modal-bg-light: light-dark(
+    linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%), 
+    linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)
+  );
+  --dropdown-bg: light-dark(#ffffff, #1c2128);
+  
+  /* Error Colors */
+  --error-bg: light-dark(rgba(239, 68, 68, 0.05), rgba(248, 113, 113, 0.1));
+  --error-border: light-dark(rgba(239, 68, 68, 0.2), rgba(248, 113, 113, 0.3));
+  --error-text: light-dark(#b91c1c, #f87171);
+  
+  /* Button Colors - Standard Blue (keep same in both themes) */
+  --btn-primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --btn-primary-hover: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  
+  /* Button Colors - Light Buttons (Browse Games -> Upload Dataset style) */
+  --btn-light-bg: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  --btn-light-hover: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  --btn-light-text: #ffffff;
+  
+  /* Navigation Colors */
+  --nav-bg: light-dark(#ffffff, #000000);
+  --nav-border: light-dark(#e5e7eb, #374151);
+  --nav-text: light-dark(#374151, #ffffff);
+  --nav-text-hover: light-dark(#1f2937, #3b82f6);
+}
+
+body {
+  background: light-dark(
+    linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%),
+    linear-gradient(135deg, #0D1117 0%, #161B22 100%)
+  );
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: var(--text-primary);
+  font-family: var(--font-family-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  border-color: var(--border-primary);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-neon-cyan);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neon-pink);
+}
+
+/* Component Classes */
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-family: var(--font-family-cyber);
+  font-weight: bold;
+  padding: 14px 28px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px var(--color-neon-cyan), 0 0 20px var(--color-neon-cyan), 0 0 35px var(--color-neon-cyan);
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px var(--color-neon-cyan), 0 0 30px var(--color-neon-cyan), 0 0 60px var(--color-neon-cyan);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  border: 2px solid var(--color-neon-cyan);
+  color: var(--color-neon-cyan);
+  font-family: var(--font-family-cyber);
+  font-weight: bold;
+  padding: 12px 26px;
+  border-radius: 10px;
+  background: transparent;
+  transition: all 0.3s;
+  cursor: pointer;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary:hover {
+  background: var(--color-neon-cyan);
+  color: var(--color-dark-bg);
+  transform: translateY(-2px);
+}
+
+.input-gaming {
+  background: var(--color-card-bg);
+  border: 2px solid var(--color-border-gray);
+  border-radius: 10px;
+  padding: 14px 18px;
+  color: white;
+  font-family: var(--font-family-cyber);
+  transition: all 0.3s;
+  outline: none;
+  min-height: 50px;
+  font-size: 14px;
+}
+
+.input-gaming::placeholder {
+  color: #9ca3af;
+}
+
+.input-gaming:focus {
+  border-color: var(--color-neon-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.2);
+}
+
+.card-gaming {
+  background: rgba(22, 27, 34, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(48, 54, 61, 0.8);
+  border-radius: 16px;
+  padding: 32px;
+  transition: all 0.3s;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.card-gaming:hover {
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3), 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.glass {
+  background: rgba(22, 27, 34, 0.85);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(48, 54, 61, 0.6);
+}
+
+.glass-strong {
+  background: rgba(22, 27, 34, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(48, 54, 61, 0.8);
+}
+
+.text-glow {
+  text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+}
+
+/* ==================== THEME COMPONENT STYLES ==================== */
+
+/* Page Background Styles */
+.page-background {
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+}
+
+/* Card Styles */
+.bg-card {
+  background-color: var(--bg-card);
+}
+
+.bg-card-hover {
+  background-color: var(--bg-card-hover);
+}
+
+.bg-card-hover:hover {
+  background-color: var(--bg-card-hover);
+}
+
+/* Input & Form Styles */
+.bg-input {
+  background-color: var(--bg-input);
+}
+
+.text-input {
+  color: var(--text-input);
+}
+
+.border-input {
+  border-color: var(--border-input);
+}
+
+.border-input-focus:focus {
+  border-color: var(--border-input-focus);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Force white text in dark mode for ALL form elements */
+.text-input-force {
+  color: var(--text-input-dark);
+}
+
+select.text-input,
+select.text-input-force,
+input.text-input,
+input.text-input-force,
+textarea.text-input,
+textarea.text-input-force,
+option {
+  color: var(--text-input-dark) !important;
+}
+
+/* Ensure dropdown options are visible in dark mode */
+@media (prefers-color-scheme: dark) {
+  select option {
+    background-color: #1f2937 !important;
+    color: #ffffff !important;
+  }
+  
+  select {
+    color: #ffffff !important;
+  }
+}
+
+.border-theme {
+  border-color: var(--border-primary);
+}
+
+/* Text Styles */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-input {
+  color: var(--text-input) !important;
+}
+
+/* Navigation Styles */
+.nav-themed {
+  background-color: var(--nav-bg);
+  border-color: var(--nav-border);
+  color: var(--nav-text);
+}
+
+/* Modal Styles */
+.modal-dark {
+  background: var(--modal-bg-dark);
+  color: var(--text-primary);
+}
+
+.modal-light {
+  background: var(--modal-bg-light);
+  color: var(--btn-light-text);
+}
+
+/* Dropdown Styles */
+.dropdown-themed {
+  background-color: var(--dropdown-bg);
+  border-color: var(--border-primary);
+  color: var(--text-primary);
+}
+
+/* Error Alert Styles */
+.alert-error {
+  background: var(--error-bg);
+  border-color: var(--error-border);
+  color: var(--error-text);
+}
+
+/* Button Updates */
+.btn-light-themed {
+  background: var(--btn-light-bg);
+  color: var(--btn-light-text);
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-light-themed:hover {
+  background: var(--btn-light-hover);
+  transform: translateY(-1px);
+}
+
+/* Input & Form Styles */
+input, select, textarea {
+  color: var(--text-input);
+  background-color: var(--bg-card);
+  border-color: var(--border-primary);
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Search Input Specific Styling */
+.search-input {
+  background-color: var(--search-bg) !important;
+  border-color: var(--search-border) !important;
+  color: var(--search-text) !important;
+}
+
+.search-input::placeholder {
+  color: var(--search-placeholder) !important;
+}
+
+.search-icon {
+  color: var(--search-icon) !important;
+}
+
+/* Admin Page Specific - Follows theme but inputs always have dark text */
+.admin-page {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.admin-page input,
+.admin-page select,
+.admin-page textarea {
+  background-color: light-dark(#ffffff, #21262d);
+  border-color: var(--border-primary);
+}
+
+.text-gradient {
+  background: linear-gradient(to right, var(--color-neon-cyan), var(--color-neon-pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.neural-bg {
+  background-image: radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(0, 255, 0, 0.1) 0%, transparent 50%);
+}
+
+.loading-spinner {
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Enhanced Form Layout */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background-color: var(--bg-primary);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 520px;
+  position: relative;
+  z-index: 10;
+}
+
+.form-section {
+  margin-bottom: 24px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.form-field label {
+  display: block;
+  color: #d1d5db;
+  font-family: var(--font-family-cyber);
+  font-size: 14px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  z-index: 2;
+}
+
+.input-with-icon {
+  padding-left: 48px;
+}
+
+/* Enhanced Password Toggle Button */
+.password-toggle-btn {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(48, 54, 61, 0.5);
+  border: 1px solid rgba(48, 54, 61, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #9ca3af;
+}
+
+.password-toggle-btn:hover {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: var(--color-neon-cyan);
+  color: var(--color-neon-cyan);
+  box-shadow: 0 0 0 1px rgba(0, 255, 255, 0.2);
+}
+
+.password-toggle-btn:focus {
+  outline: none;
+  background: rgba(0, 255, 255, 0.15);
+  border-color: var(--color-neon-cyan);
+  color: var(--color-neon-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.3);
+}
+
+.password-toggle-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.password-toggle-btn.active {
+  background: rgba(0, 255, 255, 0.2);
+  border-color: var(--color-neon-cyan);
+  color: var(--color-neon-cyan);
+}
+
+.input-action {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.input-action:hover {
+  color: var(--color-neon-cyan);
+}
+
+/* Password Strength Indicator */
+.password-strength {
+  margin-top: 12px;
+  padding: 16px;
+  background: rgba(22, 27, 34, 0.8);
+  border: 1px solid var(--color-border-gray);
+  border-radius: 8px;
+}
+
+.strength-bar {
+  height: 4px;
+  background: #374151;
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.strength-fill {
+  height: 100%;
+  transition: all 0.3s;
+}
+
+.strength-checks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.strength-check {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-family: var(--font-family-cyber);
+}
+
+.strength-check svg {
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+}
+
+/* Agreement Section */
+.agreement-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 24px 0;
+  padding: 16px;
+  background: rgba(0, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 8px;
+}
+
+.agreement-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--color-neon-cyan);
+}
+
+.agreement-text {
+  color: #d1d5db;
+  font-family: var(--font-family-cyber);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.agreement-text a {
+  color: var(--color-neon-cyan);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.agreement-text a:hover {
+  color: var(--color-neon-pink);
+  text-decoration: underline;
+}
+
+/* Error and Success States */
+.error-alert {
+  background: rgba(255, 71, 87, 0.1);
+  border: 1px solid rgba(255, 71, 87, 0.3);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.success-alert {
+  background: rgba(0, 255, 0, 0.1);
+  border: 1px solid rgba(0, 255, 0, 0.3);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* Remember Me and Links Section */
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+  padding: 12px 0;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-neon-cyan);
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border-gray);
+  border-radius: 4px;
+}
+
+.remember-me label {
+  color: #d1d5db;
+  font-family: var(--font-family-cyber);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.auth-link {
+  color: var(--color-neon-cyan);
+  text-decoration: none;
+  font-family: var(--font-family-cyber);
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.auth-link:hover {
+  color: var(--color-neon-pink);
+  text-decoration: underline;
+}
+
+/* Social Login Grid */
+.social-login-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.social-btn {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border-gray);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+}
+
+.social-btn:hover {
+  border-color: rgba(0, 255, 255, 0.5);
+  background: rgba(0, 255, 255, 0.05);
+  transform: translateY(-1px);
+}
+
+/* Utility Classes */
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.space-x-2 > * + * {
+  margin-left: 8px;
+}
+
+.space-x-3 > * + * {
+  margin-left: 12px;
+}
+
+.space-x-4 > * + * {
+  margin-left: 16px;
+}
+
+.space-x-6 > * + * {
+  margin-left: 24px;
+}
+
+.space-y-4 > * + * {
+  margin-top: 16px;
+}
+
+.space-y-6 > * + * {
+  margin-top: 24px;
+}
+
+.space-y-8 > * + * {
+  margin-top: 32px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-white {
+  color: white;
+}
+
+.text-gray-300 {
+  color: #d1d5db;
+}
+
+.text-gray-400 {
+  color: #9ca3af;
+}
+
+.text-gray-500 {
+  color: #6b7280;
+}
+
+.text-xs {
+  font-size: 12px;
+}
+
+.text-sm {
+  font-size: 14px;
+}
+
+.text-lg {
+  font-size: 18px;
+}
+
+.text-xl {
+  font-size: 20px;
+}
+
+.text-2xl {
+  font-size: 24px;
+}
+
+.text-3xl {
+  font-size: 30px;
+}
+
+.text-4xl {
+  font-size: 36px;
+}
+
+.text-6xl {
+  font-size: 60px;
+}
+
+.text-8xl {
+  font-size: 96px;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-gaming {
+  font-family: var(--font-family-gaming);
+}
+
+.font-cyber {
+  font-family: var(--font-family-cyber);
+}
+
+.font-body {
+  font-family: var(--font-family-body);
+}
+
+.mb-2 {
+  margin-bottom: 8px;
+}
+
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+.mb-6 {
+  margin-bottom: 24px;
+}
+
+.mb-8 {
+  margin-bottom: 32px;
+}
+
+.mb-12 {
+  margin-bottom: 48px;
+}
+
+.mt-2 {
+  margin-top: 8px;
+}
+
+.mt-3 {
+  margin-top: 12px;
+}
+
+.mt-8 {
+  margin-top: 32px;
+}
+
+.mr-2 {
+  margin-right: 8px;
+}
+
+.mr-3 {
+  margin-right: 12px;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.px-4 {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.px-6 {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.px-8 {
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.py-3 {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.py-4 {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.py-8 {
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.py-20 {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.p-3 {
+  padding: 12px;
+}
+
+.p-4 {
+  padding: 16px;
+}
+
+.p-8 {
+  padding: 32px;
+}
+
+.w-4 {
+  width: 16px;
+}
+
+.w-5 {
+  width: 20px;
+}
+
+.w-8 {
+  width: 32px;
+}
+
+.w-10 {
+  width: 40px;
+}
+
+.w-12 {
+  width: 48px;
+}
+
+.w-16 {
+  width: 64px;
+}
+
+.w-32 {
+  width: 128px;
+}
+
+.w-40 {
+  width: 160px;
+}
+
+.w-48 {
+  width: 192px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-4 {
+  height: 16px;
+}
+
+.h-5 {
+  height: 20px;
+}
+
+.h-8 {
+  height: 32px;
+}
+
+.h-10 {
+  height: 40px;
+}
+
+.h-12 {
+  height: 48px;
+}
+
+.h-16 {
+  height: 64px;
+}
+
+.h-32 {
+  height: 128px;
+}
+
+.h-40 {
+  height: 160px;
+}
+
+.h-48 {
+  height: 192px;
+}
+
+.max-w-md {
+  max-width: 448px;
+}
+
+.max-w-lg {
+  max-width: 512px;
+}
+
+.max-w-3xl {
+  max-width: 768px;
+}
+
+.max-w-4xl {
+  max-width: 896px;
+}
+
+.max-w-7xl {
+  max-width: 1280px;
+}
+
+.rounded-lg {
+  border-radius: 8px;
+}
+
+.rounded-xl {
+  border-radius: 12px;
+}
+
+.rounded-2xl {
+  border-radius: 16px;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.bg-gaming-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.bg-dark-gradient {
+  background: linear-gradient(135deg, #0D1117 0%, #161B22 100%);
+}
+
+.bg-card-bg {
+  background-color: var(--color-card-bg);
+}
+
+.bg-dark-bg {
+  background-color: var(--color-dark-bg);
+}
+
+.bg-neon-cyan {
+  background-color: var(--color-neon-cyan);
+}
+
+.bg-neon-pink {
+  background-color: var(--color-neon-pink);
+}
+
+.bg-neon-green {
+  background-color: var(--color-neon-green);
+}
+
+.bg-gaming-purple {
+  background-color: var(--color-gaming-purple);
+}
+
+.text-neon-cyan {
+  color: var(--color-neon-cyan);
+}
+
+.text-neon-pink {
+  color: var(--color-neon-pink);
+}
+
+.text-neon-green {
+  color: var(--color-neon-green);
+}
+
+.text-gaming-purple {
+  color: var(--color-gaming-purple);
+}
+
+.text-ragar-danger {
+  color: var(--color-ragar-danger);
+}
+
+.border {
+  border-width: 1px;
+}
+
+.border-border {
+  border-color: var(--border-border);
+}
+
+.border-border-hover {
+  border-color: var(--border-border-hover);
+}
+
+.border-border-gray {
+  border-color: var(--color-border-gray);
+}
+
+.border-neon-cyan {
+  border-color: var(--color-neon-cyan);
+}
+
+.border-ragar-danger {
+  border-color: var(--color-ragar-danger);
+}
+
+.opacity-10 {
+  opacity: 0.1;
+}
+
+.opacity-20 {
+  opacity: 0.2;
+}
+
+.opacity-30 {
+  opacity: 0.3;
+}
+
+.blur-2xl {
+  filter: blur(40px);
+}
+
+.blur-3xl {
+  filter: blur(64px);
+}
+
+.transition-colors {
+  transition: color 0.3s;
+}
+
+.transition-all {
+  transition: all 0.3s;
+}
+
+.duration-300 {
+  transition-duration: 0.3s;
+}
+
+.duration-500 {
+  transition-duration: 0.5s;
+}
+
+.duration-800 {
+  transition-duration: 0.8s;
+}
+
+.ease-out {
+  transition-timing-function: ease-out;
+}
+
+.ease-in-out {
+  transition-timing-function: ease-in-out;
+}
+
+.hover\:text-neon-cyan:hover {
+  color: var(--color-neon-cyan);
+}
+
+.hover\:text-neon-pink:hover {
+  color: var(--color-neon-pink);
+}
+
+.hover\:bg-gray-100:hover {
+  background-color: #f3f4f6;
+}
+
+.hover\:bg-white:hover {
+  background-color: white;
+}
+
+.hover\:text-dark-bg:hover {
+  color: var(--color-dark-bg);
+}
+
+.focus\:outline-none:focus {
+  outline: none;
+}
+
+.focus\:border-neon-cyan:focus {
+  border-color: var(--color-neon-cyan);
+}
+
+.focus\:ring-1:focus {
+  box-shadow: 0 0 0 1px var(--color-neon-cyan);
+}
+
+.focus\:ring-neon-cyan:focus {
+  box-shadow: 0 0 0 1px var(--color-neon-cyan);
+}
+
+.focus\:ring-2:focus {
+  box-shadow: 0 0 0 2px var(--color-neon-cyan);
+}
+
+.disabled\:opacity-50:disabled {
+  opacity: 0.5;
+}
+
+.disabled\:cursor-not-allowed:disabled {
+  cursor: not-allowed;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.inset-0 {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.top-1\/2 {
+  top: 50%;
+}
+
+.left-3 {
+  left: 12px;
+}
+
+.right-3 {
+  right: 12px;
+}
+
+.transform {
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.-translate-y-1\/2 {
+  transform: translateY(-50%);
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.block {
+  display: block;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+.grid {
+  display: grid;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-cols-5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.gap-3 {
+  gap: 12px;
+}
+
+.gap-4 {
+  gap: 16px;
+}
+
+.gap-6 {
+  gap: 24px;
+}
+
+.gap-8 {
+  gap: 32px;
+}
+
+/* Keyframes */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 20px 16px;
+  }
+
+  .auth-card {
+    max-width: 100%;
+  }
+
+  .card-gaming {
+    padding: 24px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .social-login-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .glass {
+    backdrop-filter: blur(5px);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 5px currentColor;
+  }
+
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .lg\:text-6xl {
+    font-size: 48px;
+  }
+
+  .lg\:text-8xl {
+    font-size: 72px;
+  }
+
+  .lg\:text-xl {
+    font-size: 20px;
+  }
+
+  .lg\:text-2xl {
+    font-size: 24px;
+  }
+
+  .sm\:flex-row {
+    flex-direction: row;
+  }
+
+  .sm\:space-y-0 > * + * {
+    margin-top: 0;
+  }
+
+  .sm\:space-x-6 > * + * {
+    margin-left: 24px;
+  }
+}
+
+
+
+:root {
+  --radius: 0.625rem;
+  
+  /* Gaming Color Variables */
+  --color-dark-bg: #0D1117;
+  --color-card-bg: #161B22;
+  --color-border-gray: #30363D;
+  --color-neon-cyan: #00FFFF;
+  --color-neon-pink: #FF00FF;
+  --color-neon-green: #00FF00;
+  --color-gaming-purple: #667eea;
+  --color-gaming-orange: #FF6B35;
+  --color-gaming-blue: #4F46E5;
+  --color-ragar-primary: #00FFFF;
+  --color-ragar-secondary: #FF00FF;
+  --color-ragar-accent: #00FF00;
+  --color-ragar-warning: #FF6B35;
+  --color-ragar-danger: #ff4757;
+  --color-ragar-success: #00FF00;
+  
+  --font-family-gaming: Orbitron, monospace;
+  --font-family-cyber: 'JetBrains Mono', 'Consolas', monospace;
+  --font-family-body: Inter, system-ui, sans-serif;
+  
+  /* Shadcn/ui Variables */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --chart-1: 12 76% 61%;
+  --chart-2: 173 58% 39%;
+  --chart-3: 197 37% 24%;
+  --chart-4: 43 74% 66%;
+  --chart-5: 27 87% 67%;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Fix for buttons with white/light backgrounds to have dark text */
+.btn-primary.bg-white,
+.btn-primary[style*="background-color: white"],
+.btn-primary[style*="background-color: #fff"],
+button.bg-white,
+button[style*="background-color: white"],
+button[style*="background-color: #fff"] {
+  color: #2d1b69 !important; /* Dark purple */
+}
+
+button[data-slot="button"].bg-white,
+button[data-slot="button"][style*="background-color: white"],
+button[data-slot="button"][style*="background-color: #fff"],
+button[data-slot="button"].bg-gray-100,
+button[data-slot="button"].bg-gray-50 {
+  color: #2d1b69 !important; /* Dark purple */
+}
+
+/* Ensure primary buttons always have proper contrast */
+button[data-slot="button"][class*="bg-primary"] {
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+/* Override for any light background variants */
+button[data-slot="button"].bg-white *,
+button[data-slot="button"].bg-gray-100 *,
+button[data-slot="button"].bg-gray-50 * {
+  color: inherit;
+}
