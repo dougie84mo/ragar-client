@@ -7,6 +7,7 @@ import { Modal } from '../components/ui/modal'
 import { Input } from '../components/ui/input'
 import { GET_USER_PROVIDER_CONNECTIONS, GET_SUPPORTED_GAMES } from '../lib/apollo'
 import { Plus, Link as LinkIcon, ExternalLink, Search, Trash2, RefreshCw, Activity } from 'lucide-react'
+import { usePageTitle } from '../hooks/usePageTitle'
 
 interface SupportedGameItem {
   id: string // slug
@@ -36,6 +37,8 @@ interface GameConnection {
 }
 
 const GamesConnectionPage: React.FC = () => {
+  usePageTitle('Game Connections')
+  
   const { data: supportedData } = useQuery(GET_SUPPORTED_GAMES)
   const { data: providerData, refetch: refetchConnections, loading: connectionsLoading } = useQuery(GET_USER_PROVIDER_CONNECTIONS)
 

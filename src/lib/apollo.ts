@@ -37,7 +37,10 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         console.error('🔐 RAGAR: Current token:', localStorage.getItem('ragar-auth-token') ? 'exists' : 'missing')
         console.warn('🔐 RAGAR: Clearing token and redirecting to login')
         localStorage.removeItem('ragar-auth-token')
-        window.location.href = '/auth/login'
+        // Add a small delay to allow any pending UI updates to complete
+        setTimeout(() => {
+          window.location.href = '/auth/login'
+        }, 100)
       }
     })
   }
@@ -194,6 +197,31 @@ export const REGISTER_MUTATION = gql`
   }
 `
 
+export const GOOGLE_AUTH_MUTATION = gql`
+  mutation GoogleAuth($input: GoogleAuthInput!) {
+    googleAuth(input: $input) {
+      success
+      token
+      refreshToken
+      user {
+        id
+        username
+        email
+        firstName
+        lastName
+        avatarUrl
+        preferredGames
+        isVerified
+        isActive
+        createdAt
+      }
+      error
+      isNewUser
+      generatedUsername
+    }
+  }
+`
+
 export const FORGOT_PASSWORD_MUTATION = gql`
   mutation ForgotPassword($email: String!) {
     forgotPassword(email: $email) {
@@ -247,6 +275,14 @@ export const GET_CURRENT_USER = gql`
       lastName
       avatarUrl
       preferredGames
+      collectedGames {
+        gameId
+        dateAdded
+        personalNotes
+        userPromptName
+        isActive
+        priority
+      }
       linkedGames
       gamingProfiles
       isVerified
@@ -277,6 +313,17 @@ export const GET_USER_PROFILE = gql`
   }
 `
 
+export const CHECK_USERNAME_AVAILABILITY = gql`
+  query CheckUsernameAvailability($username: String!) {
+    checkUsernameAvailability(username: $username) {
+      available
+      valid
+      message
+      suggestions
+    }
+  }
+`
+
 // Game Connection Mutations
 export const UPDATE_USER_PROFILE = gql`
   mutation UpdateUserProfile($input: UpdateUserInput!) {
@@ -301,6 +348,55 @@ export const UPDATE_PREFERRED_GAMES = gql`
       id
       preferredGames
       gamingProfiles
+    }
+  }
+`
+
+// Game Collection Mutations
+export const ADD_TO_GAME_COLLECTION = gql`
+  mutation AddToGameCollection($input: AddToCollectionInput!) {
+    addToGameCollection(input: $input) {
+      id
+      collectedGames {
+        gameId
+        dateAdded
+        personalNotes
+        userPromptName
+        isActive
+        priority
+      }
+    }
+  }
+`
+
+export const UPDATE_GAME_COLLECTION_ENTRY = gql`
+  mutation UpdateGameCollectionEntry($input: UpdateCollectionEntryInput!) {
+    updateGameCollectionEntry(input: $input) {
+      id
+      collectedGames {
+        gameId
+        dateAdded
+        personalNotes
+        userPromptName
+        isActive
+        priority
+      }
+    }
+  }
+`
+
+export const REMOVE_FROM_GAME_COLLECTION = gql`
+  mutation RemoveFromGameCollection($gameId: String!) {
+    removeFromGameCollection(gameId: $gameId) {
+      id
+      collectedGames {
+        gameId
+        dateAdded
+        personalNotes
+        userPromptName
+        isActive
+        priority
+      }
     }
   }
 `
@@ -419,7 +515,7 @@ export interface UpdateUserInput {
 }
 
 export interface LoginInput {
-  email: string
+  emailOrUsername: string
   password: string
 }
 

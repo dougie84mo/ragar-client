@@ -5,7 +5,6 @@ import apolloClient, { isAuthenticated } from './lib/apollo'
 
 // Import components
 import Navigation from './components/Navigation'
-import ErrorBoundary from './components/ErrorBoundary'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
@@ -15,7 +14,8 @@ import DashboardPage from './pages/DashboardPage'
 import ChatPage from './pages/ChatPage'
 import GamesPage from './pages/GamesPage'
 import GamesConnectionPage from './pages/GamesConnectionPage'
-import TrainingDataPage from './pages/admin/TrainingDataPage'
+import ProfilePage from './pages/ProfilePage'
+import SettingsPage from './pages/SettingsPage'
 
 // Protected Route component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -89,18 +89,15 @@ function App() {
                 </ProtectedRoute>
               } />
 
-              <Route path="/games/preferences" element={
+              <Route path="/games/collection" element={
                 <ProtectedRoute>
                   <GamesPage />
                 </ProtectedRoute>
               } />
-
-              {/* Support misspelling route for safety */}
-              <Route path="/games/preferrence" element={
-                <ProtectedRoute>
-                  <GamesPage />
-                </ProtectedRoute>
-              } />
+              
+              {/* Redirect old preferences routes for backward compatibility */}
+              <Route path="/games/preferences" element={<Navigate to="/games/collection" replace />} />
+              <Route path="/games/preferrence" element={<Navigate to="/games/collection" replace />} />
 
               <Route path="/games/connections" element={
                 <ProtectedRoute>
@@ -108,12 +105,15 @@ function App() {
                 </ProtectedRoute>
               } />
 
-              {/* Admin Routes - Protected */}
-              <Route path="/admin/training" element={
+              <Route path="/profile" element={
                 <ProtectedRoute>
-                  <ErrorBoundary>
-                    <TrainingDataPage />
-                  </ErrorBoundary>
+                  <ProfilePage />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/settings" element={
+                <ProtectedRoute>
+                  <SettingsPage />
                 </ProtectedRoute>
               } />
 

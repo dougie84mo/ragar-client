@@ -161,10 +161,9 @@ The RAGAR frontend features a comprehensive theming system that provides optimal
 - System mode dynamically responds to OS preference changes
 
 #### **Visual Consistency**
-- **Page Backgrounds**: All pages (Dashboard, Home, Chat, Games, Admin, Auth) follow theme rules
+- **Page Backgrounds**: All pages (Dashboard, Home, Chat, Games, Auth) follow theme rules
 - **Component Theming**: Cards, modals, dropdowns, buttons, and error messages are theme-aware
 - **Navigation**: Search bar and settings dropdown adapt to current theme
-- **Special Cases**: Admin page maintains readability with dark text inputs in all themes
 
 #### **How to Use**
 1. Click your profile in the top-right navigation
@@ -612,9 +611,6 @@ All interactive elements must provide clear feedback:
 
 ### **📱 Responsive Design Patterns**
 
-#### **✅ Admin Interface Standards**
-- **Grid Layouts**: Use responsive grid for form fields
-- **Mobile Compatibility**: Ensure forms work on smaller screens
 - **Touch Targets**: Minimum 44px touch targets for mobile
 - **Overflow Handling**: Proper scrolling for long forms
 

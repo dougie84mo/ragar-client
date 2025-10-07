@@ -10,8 +10,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "dev:fullstack": "concurrently \"npm run dev\" \"cd ../backend && poetry run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000\"",
-    "install:all": "npm install && cd ../backend && poetry install"
+    "dev:fullstack": "concurrently \"npm run dev\" \"cd ../api && poetry run uvicorn app.main:app --reload --host 0.0.0.0 --port 4000\"",
+    "install:all": "npm install && cd ../api && poetry install"
   },
   "keywords": [
     "gaming",
@@ -33,6 +33,7 @@
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
+    "@tailwindcss/typography": "^0.5.19",
     "axios": "^1.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -42,7 +43,9 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.6.2",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {

@@ -13,9 +13,12 @@ import {
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
+import { usePageTitle } from '../hooks/usePageTitle'
 import { Badge } from '../components/ui/badge'
 
 const DashboardPage: React.FC = () => {
+  usePageTitle('Dashboard')
+  
   return (
     <div className="page-background text-primary">
       <div className="max-w-7xl mx-auto px-4 py-6">

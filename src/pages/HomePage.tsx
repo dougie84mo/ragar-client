@@ -6,8 +6,11 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { usePageTitle } from '../hooks/usePageTitle'
 
 const HomePage: React.FC = () => {
+  usePageTitle('Welcome to RAGAR')
+  
   const gameLogos = [
     { name: 'Destiny 2', icon: '🚀', color: 'from-orange-500 to-red-500' },
     { name: 'Path of Exile', icon: '⚔️', color: 'from-yellow-500 to-orange-500' },

@@ -4,8 +4,11 @@ import { Link } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Mail, ArrowLeft, Shield, CheckCircle, AlertTriangle } from 'lucide-react'
 import { FORGOT_PASSWORD_MUTATION } from '../../lib/apollo'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 const ForgotPasswordPage: React.FC = () => {
+  usePageTitle('Reset Password')
+  
   const [email, setEmail] = useState('')
   const [emailSent, setEmailSent] = useState(false)
 

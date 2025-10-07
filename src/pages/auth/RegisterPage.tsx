@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { useMutation } from '@apollo/client'
-import { Eye, EyeOff, User, Mail, Lock, Check, X, ArrowLeft, UserPlus, AlertTriangle, CheckCircle } from 'lucide-react'
-import { REGISTER_MUTATION, setAuthToken } from '../../lib/apollo'
+import { useMutation, useLazyQuery } from '@apollo/client'
+import { Eye, EyeOff, User, Mail, Lock, Check, X, ArrowLeft, UserPlus, AlertTriangle, CheckCircle, Loader2 } from 'lucide-react'
+import { REGISTER_MUTATION, setAuthToken, CHECK_USERNAME_AVAILABILITY } from '../../lib/apollo'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,10 +11,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 interface RegisterFormData {
-  firstName: string
-  lastName: string
   username: string
   email: string
   password: string
@@ -34,14 +33,20 @@ interface PasswordStrength {
 }
 
 const RegisterPage: React.FC = () => {
+  usePageTitle('Create Account')
 
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [registrationSuccess, setRegistrationSuccess] = useState(false)
+  const [usernameStatus, setUsernameStatus] = useState<{
+    checking: boolean
+    available?: boolean
+    valid?: boolean
+    message?: string
+    suggestions?: string[]
+  }>({ checking: false })
   
   const [formData, setFormData] = useState<RegisterFormData>({
-    firstName: '',
-    lastName: '',
     username: '',
     email: '',
     password: '',
@@ -61,6 +66,69 @@ const RegisterPage: React.FC = () => {
       console.error('🧠 RAGAR: Registration failed:', error)
     }
   })
+
+  const [checkUsername] = useLazyQuery(CHECK_USERNAME_AVAILABILITY, {
+    onCompleted: (data) => {
+      setUsernameStatus({
+        checking: false,
+        available: data.checkUsernameAvailability.available,
+        valid: data.checkUsernameAvailability.valid,
+        message: data.checkUsernameAvailability.message,
+        suggestions: data.checkUsernameAvailability.suggestions
+      })
+    },
+    onError: (error) => {
+      console.error('Username check error:', error)
+      setUsernameStatus({
+        checking: false,
+        available: false,
+        valid: false,
+        message: 'Unable to check username availability'
+      })
+    }
+  })
+
+  // Debounced username checking
+  const debouncedUsernameCheck = useCallback(
+    (username: string) => {
+      if (username.length === 0) {
+        setUsernameStatus({ checking: false })
+        return
+      }
+
+      setUsernameStatus({ checking: true })
+      
+      const timeoutId = setTimeout(() => {
+        checkUsername({ variables: { username } })
+      }, 400)
+
+      return () => clearTimeout(timeoutId)
+    },
+    [checkUsername]
+  )
+
+  useEffect(() => {
+    const cleanup = debouncedUsernameCheck(formData.username)
+    return cleanup
+  }, [formData.username, debouncedUsernameCheck])
+
+  // Helper function to get user-friendly error messages
+  const getErrorMessage = (errorMessage: string): string => {
+    switch (errorMessage) {
+      case 'DUPLICATE_EMAIL':
+        return 'An account with this email address already exists. Please use a different email or try logging in.'
+      case 'DUPLICATE_USERNAME':
+        return 'This username is already taken. Please choose a different username.'
+      case 'DUPLICATE_EMAIL_AND_USERNAME':
+        return 'Both this email and username are already in use. Please choose different values.'
+      case 'INVALID_USERNAME_FORMAT':
+        return 'Username can only contain letters, numbers, spaces, hyphens (-), and underscores (_).'
+      case 'INVALID_EMAIL_FORMAT':
+        return 'Please enter a valid email address.'
+      default:
+        return errorMessage || 'Registration failed. Please try again.'
+    }
+  }
 
   const checkPasswordStrength = (password: string): PasswordStrength => {
     const checks = {
@@ -101,12 +169,11 @@ const RegisterPage: React.FC = () => {
       await register({
         variables: {
           input: {
-            firstName: formData.firstName,
-            lastName: formData.lastName,
             username: formData.username,
             email: formData.email,
             password: formData.password
             // Note: confirmPassword and agreedToTerms are frontend-only validation
+            // Note: firstName and lastName are now optional and removed from form
           }
         }
       })
@@ -242,7 +309,7 @@ const RegisterPage: React.FC = () => {
                   <AlertDescription>
                     <p className="font-cyber text-sm font-semibold">Registration Failed</p>
                     <p className="opacity-80 font-cyber text-xs">
-                      {error.message || 'Unable to create account. Please try again.'}
+                      {getErrorMessage(error.message)}
                     </p>
                   </AlertDescription>
                 </Alert>
@@ -250,88 +317,98 @@ const RegisterPage: React.FC = () => {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-gray-300 font-cyber">First Name</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input
-                      type="text"
-                      id="firstName"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      className="input-gaming pl-10"
-                      placeholder="John"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-gray-300 font-cyber">Last Name</Label>
-                  <Input
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className="input-gaming"
-                    placeholder="Doe"
-                    required
-                  />
-                </div>
-              </div>
-
               {/* Username */}
               <div className="space-y-2">
-                <Label htmlFor="username" className="text-gray-300 font-cyber">Username</Label>
+                <div className="flex items-center space-x-2">
+                  <User className="w-5 h-5 text-gray-400" />
+                  <Label htmlFor="username" className="text-gray-300 font-cyber">Username</Label>
+                </div>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
                     type="text"
                     id="username"
                     name="username"
                     value={formData.username}
                     onChange={handleInputChange}
-                    className="input-gaming pl-10"
+                    className="input-gaming pr-10"
                     placeholder="gamer_username"
+                    maxLength={64}
                     required
                   />
+                  {/* Username status indicator */}
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    {usernameStatus.checking && (
+                      <Loader2 className="w-4 h-4 text-neon-cyan animate-spin" />
+                    )}
+                    {!usernameStatus.checking && usernameStatus.available === true && (
+                      <Check className="w-4 h-4 text-neon-green" />
+                    )}
+                    {!usernameStatus.checking && usernameStatus.available === false && usernameStatus.valid === true && (
+                      <X className="w-4 h-4 text-ragar-danger" />
+                    )}
+                    {!usernameStatus.checking && usernameStatus.valid === false && (
+                      <AlertTriangle className="w-4 h-4 text-yellow-500" />
+                    )}
+                  </div>
                 </div>
+                
+                {/* Username status message */}
+                {formData.username && !usernameStatus.checking && usernameStatus.message && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="mt-2"
+                  >
+                    <div className={`flex items-center space-x-2 text-xs font-cyber ${
+                      usernameStatus.available === true ? 'text-neon-green' : 
+                      usernameStatus.valid === false ? 'text-yellow-500' : 'text-ragar-danger'
+                    }`}>
+                      <span>{usernameStatus.message}</span>
+                    </div>
+                    {usernameStatus.suggestions && usernameStatus.suggestions.length > 0 && (
+                      <div className="mt-1 text-xs text-gray-400 font-cyber">
+                        Suggestions: {usernameStatus.suggestions.join(', ')}
+                      </div>
+                    )}
+                  </motion.div>
+                )}
               </div>
 
               {/* Email */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-300 font-cyber">Email Address</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <Input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="input-gaming pl-10"
-                    placeholder="gamer@neural.network"
-                    required
-                  />
+                <div className="flex items-center space-x-2">
+                  <Mail className="w-5 h-5 text-gray-400" />
+                  <Label htmlFor="email" className="text-gray-300 font-cyber">Email Address</Label>
                 </div>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="input-gaming"
+                  placeholder="gamer@neural.network"
+                  maxLength={64}
+                  required
+                />
               </div>
 
               {/* Password */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-300 font-cyber">Password</Label>
+                <div className="flex items-center space-x-2">
+                  <Lock className="w-5 h-5 text-gray-400" />
+                  <Label htmlFor="password" className="text-gray-300 font-cyber">Password</Label>
+                </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
                     type={showPassword ? 'text' : 'password'}
                     id="password"
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="input-gaming pl-10 pr-12"
+                    className="input-gaming pr-12"
                     placeholder="••••••••"
+                    maxLength={100}
                     required
                   />
                   <Button
@@ -401,17 +478,20 @@ const RegisterPage: React.FC = () => {
 
               {/* Confirm Password */}
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-gray-300 font-cyber">Confirm Password</Label>
+                <div className="flex items-center space-x-2">
+                  <Lock className="w-5 h-5 text-gray-400" />
+                  <Label htmlFor="confirmPassword" className="text-gray-300 font-cyber">Confirm Password</Label>
+                </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
                     type={showConfirmPassword ? 'text' : 'password'}
                     id="confirmPassword"
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className="input-gaming pl-10 pr-12"
+                    className="input-gaming pr-12"
                     placeholder="••••••••"
+                    maxLength={100}
                     required
                   />
                   <Button
@@ -450,17 +530,17 @@ const RegisterPage: React.FC = () => {
               {/* Terms Agreement */}
               <Card className="bg-neon-cyan/5 border-neon-cyan/20">
                 <CardContent className="p-4">
-                  <div className="flex items-start space-x-3">
+                  <div className="space-y-3">
                     <input
                       type="checkbox"
                       id="agreedToTerms"
                       name="agreedToTerms"
                       checked={formData.agreedToTerms}
                       onChange={handleInputChange}
-                      className="mt-1 rounded border-border-gray bg-card-bg accent-neon-cyan"
+                      className="rounded border-border-gray bg-card-bg accent-neon-cyan"
                       required
                     />
-                    <Label htmlFor="agreedToTerms" className="text-gray-300 font-cyber text-sm cursor-pointer">
+                    <Label htmlFor="agreedToTerms" className="text-gray-300 font-cyber text-sm cursor-pointer ml-2">
                       I agree to the{' '}
                       <Link to="/terms" className="text-neon-cyan hover:text-neon-pink transition-colors">Terms of Service</Link>{' '}
                       and{' '}

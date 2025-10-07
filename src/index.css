@@ -371,18 +371,6 @@ input:focus, select:focus, textarea:focus {
   color: var(--search-icon) !important;
 }
 
-/* Admin Page Specific - Follows theme but inputs always have dark text */
-.admin-page {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-}
-
-.admin-page input,
-.admin-page select,
-.admin-page textarea {
-  background-color: light-dark(#ffffff, #21262d);
-  border-color: var(--border-primary);
-}
 
 .text-gradient {
   background: linear-gradient(to right, var(--color-neon-cyan), var(--color-neon-pink));

@@ -12,17 +12,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 interface LoginFormData {
-  email: string
+  emailOrUsername: string
   password: string
   rememberMe: boolean
 }
 
 const LoginPage: React.FC = () => {
+  usePageTitle('Sign In')
+  
   const navigate = useNavigate()
   const [formData, setFormData] = useState<LoginFormData>({
-    email: '',
+    emailOrUsername: '',
     password: '',
     rememberMe: false
   })
@@ -61,7 +64,7 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!formData.email || !formData.password) {
+    if (!formData.emailOrUsername || !formData.password) {
       setError('Please fill in all fields')
       return
     }
@@ -69,20 +72,13 @@ const LoginPage: React.FC = () => {
     await loginUser({
       variables: {
         input: {
-          email: formData.email,
+          emailOrUsername: formData.emailOrUsername,
           password: formData.password
         }
       }
     })
   }
 
-  const socialLogins = [
-    { name: 'Google', icon: '🌟', color: '#4285F4' },
-    { name: 'Apple', icon: '🍎', color: '#000000' },
-    { name: 'Facebook', icon: '📘', color: '#1877F2' },
-    { name: 'Steam', icon: '🎮', color: '#171A21' },
-    { name: 'Discord', icon: '💬', color: '#5865F2' }
-  ]
 
   return (
     <div className="auth-container">
@@ -184,42 +180,46 @@ const LoginPage: React.FC = () => {
 
             {/* Login Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Email Field */}
+              {/* Email or Username Field */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-300 font-cyber">
-                  Email Address
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <Input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="input-gaming pl-10"
-                    placeholder="Enter your email"
-                    required
-                    disabled={loading}
-                  />
+                <div className="flex items-center space-x-2">
+                  <Mail className="w-5 h-5 text-gray-400" />
+                  <Label htmlFor="emailOrUsername" className="text-gray-300 font-cyber">
+                    Email or Username
+                  </Label>
                 </div>
+                <Input
+                  type="text"
+                  id="emailOrUsername"
+                  name="emailOrUsername"
+                  value={formData.emailOrUsername}
+                  onChange={handleInputChange}
+                  className="input-gaming"
+                  placeholder="Enter your email or username"
+                  maxLength={64}
+                  required
+                  disabled={loading}
+                />
               </div>
 
               {/* Password Field */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-300 font-cyber">
-                  Password
-                </Label>
+                <div className="flex items-center space-x-2">
+                  <Lock className="w-5 h-5 text-gray-400" />
+                  <Label htmlFor="password" className="text-gray-300 font-cyber">
+                    Password
+                  </Label>
+                </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
                     type={showPassword ? "text" : "password"}
                     id="password"
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="input-gaming pl-10 pr-12"
+                    className="input-gaming pr-12"
                     placeholder="Enter your password"
+                    maxLength={100}
                     required
                     disabled={loading}
                   />
@@ -279,38 +279,6 @@ const LoginPage: React.FC = () => {
               </motion.div>
             </form>
 
-            {/* Divider */}
-            <div className="flex items-center my-8">
-              <Separator className="flex-1" />
-              <span className="px-4 text-gray-400 font-cyber text-sm">or continue with</span>
-              <Separator className="flex-1" />
-            </div>
-
-            {/* Social Login */}
-            <div className="grid grid-cols-5 gap-3">
-              {socialLogins.map((social, index) => (
-                <motion.div
-                  key={social.name}
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * index }}
-                >
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="w-full h-12 border-border-gray hover:border-neon-cyan/50 hover:bg-neon-cyan/5"
-                    onClick={() => {
-                      // TODO: Implement social login
-                      console.log(`Login with ${social.name}`)
-                    }}
-                  >
-                    <span className="text-xl">{social.icon}</span>
-                  </Button>
-                </motion.div>
-              ))}
-            </div>
 
             {/* Sign Up Link */}
             <div className="text-center pt-6">

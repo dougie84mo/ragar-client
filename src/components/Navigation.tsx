@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Menu, X, User, Search, Bell, Settings, ChevronDown, LogOut, Sun, Moon, Monitor } from 'lucide-react'
+import { Menu, X, User, Search, Bell, Settings, ChevronDown, LogOut, Sun, Moon, Monitor, Link as LinkIcon, MessageSquare } from 'lucide-react'
 import { isAuthenticated, removeAuthToken } from '../lib/apollo'
 import { useTheme } from '../contexts/ThemeContext'
 
@@ -51,39 +51,6 @@ const Navigation: React.FC = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
-            <Link
-              to="/dashboard"
-              className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
-            >
-              Dash
-            </Link>
-            <Link
-              to="/chat"
-              className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
-            >
-              Chat
-            </Link>
-            <Link
-              to="/games/preferences"
-              className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
-            >
-              Games
-            </Link>
-            <Link
-              to="/games/connections"
-              className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
-            >
-              Connections
-            </Link>
-            <Link
-              to="/admin/training"
-              className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
-            >
-              Admin
-            </Link>
-          </div>
 
           {/* Right Side */}
           <div className="flex items-center space-x-3">
@@ -102,23 +69,16 @@ const Navigation: React.FC = () => {
               </div>
             </div>
 
-            {/* Theme Toggle */}
-            <button className="p-2 text-zinc-400 hover:text-white rounded-md hover:bg-zinc-800 transition-colors">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 3V5M12 19V21M5 12H3M21 12H19M5.64 5.64L7.05 7.05M16.95 16.95L18.36 18.36M5.64 18.36L7.05 16.95M16.95 7.05L18.36 5.64" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-            </button>
-
-            {/* GitHub */}
-            <Link
-              to="https://github.com/ragar-ai"
-              className="p-2 text-zinc-400 hover:text-white rounded-md hover:bg-zinc-800 transition-colors"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-              </svg>
-            </Link>
+            {/* Chat Icon */}
+            {authenticated && (
+              <Link
+                to="/chat"
+                className="p-2 text-zinc-400 hover:text-white rounded-md hover:bg-zinc-800 transition-colors"
+                title="Chat with RAGAR"
+              >
+                <MessageSquare className="w-4 h-4" />
+              </Link>
+            )}
 
             {/* User Menu */}
             {authenticated ? (
@@ -126,12 +86,6 @@ const Navigation: React.FC = () => {
                 <button className="p-2 text-zinc-400 hover:text-white rounded-md hover:bg-zinc-800 transition-colors">
                   <Bell className="w-4 h-4" />
                 </button>
-                <div className="flex items-center space-x-2">
-                  <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                    <User className="w-3 h-3 text-white" />
-                  </div>
-                  <span className="text-sm font-medium text-white hidden sm:block">Guardian</span>
-                </div>
                 
                 {/* Settings Dropdown */}
                 <div className="relative" ref={settingsDropdownRef}>
@@ -159,28 +113,30 @@ const Navigation: React.FC = () => {
                         <span>Settings</span>
                       </Link>
                       <Link
-                        to="/preferences"
+                        to="/games/collection"
                         className="flex items-center space-x-2 px-4 py-2 text-sm text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors"
                         onClick={() => setIsSettingsDropdownOpen(false)}
                       >
-                        <User className="w-4 h-4" />
-                        <span>Preferences</span>
+                        <Settings className="w-4 h-4" />
+                        <span>Collections</span>
+                      </Link>
+                      <Link
+                        to="/games/connections"
+                        className="flex items-center space-x-2 px-4 py-2 text-sm text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors"
+                        onClick={() => setIsSettingsDropdownOpen(false)}
+                      >
+                        <LinkIcon className="w-4 h-4" />
+                        <span>Connections</span>
                       </Link>
                       <Link
                         to="/profile"
                         className="flex items-center space-x-2 px-4 py-2 text-sm text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors"
                         onClick={() => setIsSettingsDropdownOpen(false)}
                       >
-                        <User className="w-4 h-4" />
+                        <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                          <User className="w-4 h-4" />
+                        </div>
                         <span>Profile</span>
-                      </Link>
-                      <Link
-                        to="/admin/training"
-                        className="flex items-center space-x-2 px-4 py-2 text-sm text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors"
-                        onClick={() => setIsSettingsDropdownOpen(false)}
-                      >
-                        <Settings className="w-4 h-4" />
-                        <span>🎮 Training Admin</span>
                       </Link>
                       <div className="border-t border-theme my-1"></div>
                       
@@ -288,20 +244,6 @@ const Navigation: React.FC = () => {
               >
                 Chat
               </Link>
-              <Link
-                to="/games/preferences"
-                className="block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Games
-              </Link>
-              <Link
-                to="/games/connections"
-                className="block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Connections
-              </Link>
               
               {authenticated && (
                 <>
@@ -314,11 +256,18 @@ const Navigation: React.FC = () => {
                       Settings
                     </Link>
                     <Link
-                      to="/preferences"
+                      to="/games/collection"
                       className="block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      Preferences
+                      Collections
+                    </Link>
+                    <Link
+                      to="/games/connections"
+                      className="block px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Connections
                     </Link>
                     <Link
                       to="/profile"

@@ -3,6 +3,7 @@ import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import { Button } from '../../components/ui/button'
 import { Alert } from '../../components/ui/alert'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 // Game-specific authentication configurations
 const GAME_AUTH_CONFIGS = {
@@ -53,6 +54,8 @@ interface AuthState {
 
 const GameAuthPage: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>()
+  usePageTitle(`Connect ${gameId ? gameId.toUpperCase() : 'Game'} Account`)
+  
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const [authState, setAuthState] = useState<AuthState>({ status: 'idle' })
