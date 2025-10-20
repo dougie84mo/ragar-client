@@ -139,6 +139,7 @@ export interface User {
   isActive: boolean
   createdAt: string
   linkedGames?: Record<string, string>
+  settings?: UserSettings
 }
 
 export interface AuthResponse {
@@ -289,6 +290,63 @@ export const GET_CURRENT_USER = gql`
       isActive
       createdAt
       lastLogin
+      profile {
+        displayName
+        avatar
+        biography
+        favoriteClass
+        playstyle
+        timezone
+        location
+        website
+        socialLinks
+        profileBanner
+      }
+      gamingProfile {
+        favoriteGame
+        favoriteGames
+        platforms
+        skillLevel
+        playstyle
+        gamingHoursPerWeek
+        preferredGenres
+        achievements
+        streamingPlatforms
+      }
+      settings {
+        security {
+          twoFactorEnabled
+          passwordLastChanged
+          loginNotifications
+        }
+        notifications {
+          emailNotifications
+          pushNotifications
+          smsNotifications
+          gameUpdates
+          weeklyDigest
+          marketingEmails
+          soundEnabled
+        }
+        communication {
+          emailAddress
+          phoneNumber
+          smsEnabled
+        }
+        subscription {
+          subscriptionTier
+          autoRenew
+          billingCycle
+        }
+        privacy {
+          profileVisibility
+          dataSharing
+          analyticsOptOut
+        }
+        theme
+        language
+        timezone
+      }
     }
   }
 `
@@ -324,7 +382,7 @@ export const CHECK_USERNAME_AVAILABILITY = gql`
   }
 `
 
-// Game Connection Mutations
+// User Profile Mutations
 export const UPDATE_USER_PROFILE = gql`
   mutation UpdateUserProfile($input: UpdateUserInput!) {
     updateUserProfile(input: $input) {
@@ -338,6 +396,31 @@ export const UPDATE_USER_PROFILE = gql`
       gamingProfiles
       isVerified
       isActive
+      profile {
+        displayName
+        avatar
+        avatarThumb
+        avatarFull
+        biography
+        favoriteClass
+        playstyle
+        timezone
+        location
+        website
+        socialLinks
+        profileBanner
+      }
+      gamingProfile {
+        favoriteGame
+        favoriteGames
+        platforms
+        skillLevel
+        playstyle
+        gamingHoursPerWeek
+        preferredGenres
+        achievements
+        streamingPlatforms
+      }
     }
   }
 `
@@ -508,10 +591,312 @@ export const DISCONNECT_PROVIDER = gql`
   }
 `
 
+// Settings Mutations
+export const UPDATE_SECURITY_SETTINGS = gql`
+  mutation UpdateSecuritySettings($input: SecuritySettingsInput!) {
+    updateSecuritySettings(input: $input) {
+      id
+      settings {
+        security {
+          twoFactorEnabled
+          passwordLastChanged
+          loginNotifications
+        }
+      }
+    }
+  }
+`
+
+export const UPDATE_NOTIFICATION_SETTINGS = gql`
+  mutation UpdateNotificationSettings($input: NotificationSettingsInput!) {
+    updateNotificationSettings(input: $input) {
+      id
+      settings {
+        notifications {
+          emailNotifications
+          pushNotifications
+          smsNotifications
+          gameUpdates
+          weeklyDigest
+          marketingEmails
+          soundEnabled
+        }
+      }
+    }
+  }
+`
+
+export const UPDATE_COMMUNICATION_SETTINGS = gql`
+  mutation UpdateCommunicationSettings($input: CommunicationSettingsInput!) {
+    updateCommunicationSettings(input: $input) {
+      id
+      email
+      settings {
+        communication {
+          emailAddress
+          phoneNumber
+          smsEnabled
+        }
+      }
+    }
+  }
+`
+
+export const UPDATE_PRIVACY_SETTINGS = gql`
+  mutation UpdatePrivacySettings($input: PrivacySettingsInput!) {
+    updatePrivacySettings(input: $input) {
+      id
+      settings {
+        privacy {
+          profileVisibility
+          dataSharing
+          analyticsOptOut
+        }
+      }
+    }
+  }
+`
+
+// Subscription and Payment Queries
+export const GET_SUBSCRIPTION_TIERS = gql`
+  query GetSubscriptionTiers {
+    subscriptionTiers {
+      id
+      name
+      displayName
+      price
+      billingCycle
+      maxCollections
+      tokenLimit
+      maxConnections
+      features
+      isPopular
+      stripePriceId
+    }
+  }
+`
+
+export const GET_CURRENT_SUBSCRIPTION = gql`
+  query GetCurrentSubscription {
+    currentSubscription {
+      tier
+      displayName
+      price
+      maxCollections
+      tokenLimit
+      maxConnections
+      features
+      autoRenew
+      billingCycle
+      currentPeriodStart
+      currentPeriodEnd
+      cancelAtPeriodEnd
+      isActive
+      canUpgrade
+      scheduledTierChange
+      scheduledChangeDisplayName
+      scheduledBillingCycleChange
+      scheduledChangeDate
+      subscriptionStatus
+      stripeSubscriptionId
+      stripeCustomerId
+      upgradeSuggestions {
+        id
+        name
+        displayName
+        price
+        features
+        isPopular
+      }
+    }
+  }
+`
+
+export const GET_USER_PAYMENT_METHODS = gql`
+  query GetUserPaymentMethods {
+    userPaymentMethods {
+      id
+      type
+      last4
+      brand
+      expiryMonth
+      expiryYear
+      isDefault
+      createdAt
+    }
+  }
+`
+
+export const GET_USER_BILLING_HISTORY = gql`
+  query GetUserBillingHistory($limit: Int) {
+    userBillingHistory(limit: $limit) {
+      id
+      type
+      amount
+      amountRefunded
+      currency
+      status
+      description
+      invoiceUrl
+      paidAt
+      createdAt
+      refunded
+      chargeId
+      reason
+      receiptNumber
+      paymentMethod
+      subscriptionId
+    }
+  }
+`
+
+// Subscription and Payment Mutations
+export const UPGRADE_SUBSCRIPTION = gql`
+  mutation UpgradeSubscription($input: UpgradeSubscriptionInput!) {
+    upgradeSubscription(input: $input) {
+      success
+      subscription {
+        tier
+        displayName
+        price
+        maxCollections
+        tokenLimit
+        maxConnections
+        features
+        autoRenew
+        billingCycle
+        currentPeriodStart
+        currentPeriodEnd
+        cancelAtPeriodEnd
+        isActive
+        canUpgrade
+        stripeSubscriptionId
+        stripeCustomerId
+      }
+      error
+      requiresPaymentMethod
+      clientSecret
+    }
+  }
+`
+
+export const CANCEL_SUBSCRIPTION = gql`
+  mutation CancelSubscription {
+    cancelSubscription {
+      success
+      subscription {
+        tier
+        displayName
+        autoRenew
+        billingCycle
+        cancelAtPeriodEnd
+        isActive
+      }
+      error
+      requiresPaymentMethod
+      clientSecret
+    }
+  }
+`
+
+export const UPDATE_BILLING_CYCLE = gql`
+  mutation UpdateBillingCycle($billingCycle: String!) {
+    updateBillingCycle(billingCycle: $billingCycle) {
+      id
+      settings {
+        subscription {
+          subscriptionTier
+          autoRenew
+          billingCycle
+        }
+      }
+    }
+  }
+`
+
+export const UPDATE_AUTO_RENEW = gql`
+  mutation UpdateAutoRenew($autoRenew: Boolean!) {
+    updateAutoRenew(autoRenew: $autoRenew) {
+      success
+      subscription {
+        tier
+        displayName
+        autoRenew
+        cancelAtPeriodEnd
+        scheduledTierChange
+        scheduledChangeDate
+      }
+      error
+    }
+  }
+`
+
+export const ADD_PAYMENT_METHOD = gql`
+  mutation AddPaymentMethod($input: AddPaymentMethodInput!) {
+    addPaymentMethod(input: $input) {
+      success
+      paymentMethod {
+        id
+        type
+        last4
+        brand
+        expiryMonth
+        expiryYear
+        isDefault
+        createdAt
+      }
+      error
+      clientSecret
+    }
+  }
+`
+
+export const REMOVE_PAYMENT_METHOD = gql`
+  mutation RemovePaymentMethod($paymentMethodId: String!) {
+    removePaymentMethod(paymentMethodId: $paymentMethodId)
+  }
+`
+
+export const SET_DEFAULT_PAYMENT_METHOD = gql`
+  mutation SetDefaultPaymentMethod($paymentMethodId: String!) {
+    setDefaultPaymentMethod(paymentMethodId: $paymentMethodId)
+  }
+`
+
+export interface ProfileInput {
+  displayName?: string
+  avatar?: string
+  avatarThumb?: string
+  avatarFull?: string
+  biography?: string
+  favoriteClass?: string
+  playstyle?: string
+  timezone?: string
+  location?: string
+  website?: string
+  socialLinks?: Record<string, string>
+  profileBanner?: string
+}
+
+export interface GamingProfileInput {
+  favoriteGame?: string
+  favoriteGames?: string[]
+  platforms?: string[]
+  skillLevel?: string
+  playstyle?: string
+  gamingHoursPerWeek?: number
+  preferredGenres?: string[]
+  achievements?: string[]
+  streamingPlatforms?: string[]
+}
+
 export interface UpdateUserInput {
+  username?: string
   firstName?: string
   lastName?: string
   avatarUrl?: string
+  profile?: ProfileInput
+  gamingProfile?: GamingProfileInput
 }
 
 export interface LoginInput {
@@ -536,4 +921,97 @@ export interface GameProgressInput {
   playtimeHours?: number
   completedContent?: string[]
   currentGoals?: string[]
+}
+
+// Settings Input Types
+export interface SecuritySettingsInput {
+  twoFactorEnabled?: boolean
+  loginNotifications?: boolean
+}
+
+export interface NotificationSettingsInput {
+  emailNotifications?: boolean
+  pushNotifications?: boolean
+  smsNotifications?: boolean
+  gameUpdates?: boolean
+  weeklyDigest?: boolean
+  marketingEmails?: boolean
+  soundEnabled?: boolean
+}
+
+export interface CommunicationSettingsInput {
+  phoneNumber?: string
+  smsEnabled?: boolean
+}
+
+export interface PrivacySettingsInput {
+  profileVisibility?: string
+  dataSharing?: boolean
+  analyticsOptOut?: boolean
+}
+
+// Settings Data Types
+export interface SecuritySettings {
+  twoFactorEnabled: boolean
+  passwordLastChanged: string | null
+  loginNotifications: boolean
+}
+
+export interface NotificationSettings {
+  emailNotifications: boolean
+  pushNotifications: boolean
+  smsNotifications: boolean
+  gameUpdates: boolean
+  weeklyDigest: boolean
+  marketingEmails: boolean
+  soundEnabled: boolean
+}
+
+export interface CommunicationSettings {
+  emailAddress: string | null
+  phoneNumber: string | null
+  smsEnabled: boolean
+}
+
+export interface SubscriptionSettings {
+  subscriptionTier: string
+  autoRenew: boolean
+  billingCycle: string
+  maxCollections: number
+  tokenLimit: number
+  maxConnections: number
+  currentPeriodStart?: string
+  currentPeriodEnd?: string
+  cancelAtPeriodEnd: boolean
+  stripeSubscriptionId?: string
+  stripeCustomerId?: string
+}
+
+// Subscription and Payment Input Types
+export interface UpgradeSubscriptionInput {
+  tierName: string
+  billingCycle: string
+  paymentMethodId?: string
+}
+
+export interface AddPaymentMethodInput {
+  paymentMethodId: string
+  setAsDefault?: boolean
+}
+
+export interface PrivacySettings {
+  profileVisibility: string
+  dataSharing: boolean
+  analyticsOptOut: boolean
+}
+
+export interface UserSettings {
+  security: SecuritySettings
+  notifications: NotificationSettings
+  communication: CommunicationSettings
+  subscription: SubscriptionSettings
+  privacy: PrivacySettings
+  theme: string
+  language: string
+  timezone: string
 } 

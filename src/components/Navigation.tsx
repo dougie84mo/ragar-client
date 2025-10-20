@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Menu, X, User, Search, Bell, Settings, ChevronDown, LogOut, Sun, Moon, Monitor, Link as LinkIcon, MessageSquare } from 'lucide-react'
+import { Menu, X, User, Search, Bell, Settings, ChevronDown, LogOut, Sun, Moon, Monitor, Link as LinkIcon, MessageSquare, Gamepad2 } from 'lucide-react'
 import { isAuthenticated, removeAuthToken } from '../lib/apollo'
 import { useTheme } from '../contexts/ThemeContext'
 
@@ -117,7 +117,7 @@ const Navigation: React.FC = () => {
                         className="flex items-center space-x-2 px-4 py-2 text-sm text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors"
                         onClick={() => setIsSettingsDropdownOpen(false)}
                       >
-                        <Settings className="w-4 h-4" />
+                        <Gamepad2 className="w-4 h-4" />
                         <span>Collections</span>
                       </Link>
                       <Link

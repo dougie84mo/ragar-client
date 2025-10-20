@@ -16,6 +16,9 @@ import GamesPage from './pages/GamesPage'
 import GamesConnectionPage from './pages/GamesConnectionPage'
 import ProfilePage from './pages/ProfilePage'
 import SettingsPage from './pages/SettingsPage'
+import PricingPage from './pages/PricingPage'
+import PaymentPage from './pages/PaymentPage'
+import CheckoutPage from './pages/CheckoutPage'
 
 // Protected Route component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -114,6 +117,24 @@ function App() {
               <Route path="/settings" element={
                 <ProtectedRoute>
                   <SettingsPage />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/pricing" element={
+                <ProtectedRoute>
+                  <PricingPage />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/payment" element={
+                <ProtectedRoute>
+                  <PaymentPage />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/checkout" element={
+                <ProtectedRoute>
+                  <CheckoutPage />
                 </ProtectedRoute>
               } />
 

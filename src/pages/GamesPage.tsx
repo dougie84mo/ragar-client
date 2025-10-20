@@ -300,62 +300,7 @@ const GamesPage: React.FC = () => {
           </p>
         </div>
 
-        {/* User Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card className="bg-zinc-900 border-zinc-800">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-zinc-400">Total Games</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-2">
-                <span className="text-2xl font-bold">{allGamesData?.allGames?.length || 0}</span>
-                <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">Supported</Badge>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-zinc-900 border-zinc-800">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-zinc-400">Collection Size</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-2">
-                <span className="text-2xl font-bold text-green-400">
-                  {(userData?.me as any)?.collectedGames?.length || 0}
-                </span>
-                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Collected</Badge>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-zinc-900 border-zinc-800">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-zinc-400">Total Playtime</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-2">
-                <span className="text-2xl font-bold text-purple-400">
-                  {getTotalPlaytime().toFixed(0)}h
-                </span>
-                <Clock className="w-5 h-5 text-purple-400" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-zinc-900 border-zinc-800">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-zinc-400">Total Users</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-2">
-                <span className="text-2xl font-bold">
-                  150K+
-                </span>
-                <Users className="w-5 h-5 text-blue-400" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        
 
         {/* Add to Collection Section */}
         <div className="mb-8 flex justify-between items-center">
@@ -495,6 +440,49 @@ const GamesPage: React.FC = () => {
             </CardContent>
           </Card>
         )}
+
+        {/* User Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <Card className="bg-zinc-900 border-zinc-800">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-zinc-400">Total Games</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center space-x-2">
+                <span className="text-2xl font-bold">{allGamesData?.allGames?.length || 0}</span>
+                <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">Supported</Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-zinc-900 border-zinc-800">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-zinc-400">Collection Size</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center space-x-2">
+                <span className="text-2xl font-bold text-green-400">
+                  {(userData?.me as any)?.collectedGames?.length || 0}
+                </span>
+                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Collected</Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-zinc-900 border-zinc-800">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-zinc-400">Total Playtime</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center space-x-2">
+                <span className="text-2xl font-bold text-purple-400">
+                  {getTotalPlaytime().toFixed(0)}h
+                </span>
+                <Clock className="w-5 h-5 text-purple-400" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Game Collection Info */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -725,11 +713,11 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
               onChange={(e) => setPriority(Number(e.target.value))}
               className="w-full border border-border rounded px-3 py-2 bg-input text-input"
             >
-              <option value={1}>1 - Minimal</option>
-              <option value={2}>2 - Low</option>
-              <option value={3}>3 - Medium</option>
-              <option value={4}>4 - High</option>
-              <option value={5}>5 - Critical</option>
+              <option value={1}>1 Minimal</option>
+              <option value={2}>2 Low</option>
+              <option value={3}>3 Medium</option>
+              <option value={4}>4 High</option>
+              <option value={5}>5 Critical</option>
             </select>
           </div>
 
